@@ -56,6 +56,32 @@ npm test           # logic + database security tests (no Supabase project needed
 npm run typecheck
 ```
 
+## Working on two computers (lab PC and laptop)
+
+GitHub is the single source of truth. Always pull before you start and push when you stop.
+
+**Start of every session**
+```
+cd PEERIX
+git pull
+cd mobile
+npm install        # only needed when package.json changed
+npx expo start --tunnel ngrok
+```
+
+**End of every session**
+```
+git add -A
+git commit -m "Describe what you did"
+git push
+```
+
+- `mobile/.env` is not on GitHub: create it once on each computer from `mobile/.env.example`.
+- If `git pull` says you have local changes, commit them first, then pull again.
+- On the shared lab PC, set your name only for this project:
+  `git config user.name "Your Name"` and `git config user.email "you@example.com"`.
+  Sign out of GitHub and Expo before you leave.
+
 ## How access is enforced
 
 Every rule lives in the database, so it holds no matter which client calls the API:
