@@ -220,6 +220,15 @@ alter table public.room_sessions enable row level security;
 alter table public.doubts enable row level security;
 alter table public.doubt_replies enable row level security;
 
+-- New Supabase projects do not give the API roles access to new tables, so grant
+-- it here; the statements below narrow it, and the policies decide which rows.
+grant usage on schema public to anon, authenticated;
+grant select on public.college_domains to anon, authenticated;
+grant select, insert, update, delete on public.profiles, public.skills, public.availability,
+  public.learning_requests, public.rooms, public.plan_items, public.room_sessions,
+  public.doubts, public.doubt_replies
+  to authenticated;
+
 -- Signed-out visitors may only read the allowed domains (for the login form).
 revoke all on public.profiles, public.skills, public.availability, public.learning_requests,
   public.rooms, public.plan_items, public.room_sessions, public.doubts, public.doubt_replies

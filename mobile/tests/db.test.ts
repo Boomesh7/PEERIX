@@ -1,7 +1,7 @@
 /**
  * Runs the real Supabase migration on an in-memory Postgres (PGlite) and checks
- * the security rules as signed-in students. Supabase's auth schema, roles and
- * default grants are stubbed to match a hosted project.
+ * the security rules as signed-in students. Supabase's auth schema and roles are
+ * stubbed to match a new hosted project, which grants no table access by default.
  */
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
@@ -24,10 +24,8 @@ const SUPABASE_STUB = `
     select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid
   $$;
   grant execute on function auth.uid() to anon, authenticated;
-  grant usage on schema public to anon, authenticated;
-  -- Hosted Supabase grants new public tables and functions to the API roles.
-  alter default privileges in schema public grant all on tables to anon, authenticated;
-  alter default privileges in schema public grant all on functions to anon, authenticated;
+  -- New hosted Supabase projects do not grant public tables to the API roles
+  -- automatically, so the migrations must grant every table they expose.
 `;
 
 let db: PGlite;
